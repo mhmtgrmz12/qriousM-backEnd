@@ -55,20 +55,15 @@ def check_answer(id: int, answer: str):
     difficulty = question["difficulty"]
     move = 0
 
-    if is_correct:
-        if difficulty == "easy":
-            move = 1
-        elif difficulty == "medium":
-            move = 2
-        elif difficulty == "hard":
-            move = 3
-    else:
-        if difficulty == "easy":
-            move = -3
-        elif difficulty == "medium":
-            move = -2
-        elif difficulty == "hard":
-            move = -1
+    match difficulty:
+        case "easy":
+            move = 1 if is_correct else -3
+        case "medium":
+            move = 2 if is_correct else -2
+        case "hard":
+            move = 3 if is_correct else -1
+        case _:
+            move = 0
 
     return {
         "correct": is_correct,
