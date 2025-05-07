@@ -1,4 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
+
+import database
 import queries
 from typing import Optional
 
@@ -46,7 +48,31 @@ def check_answer(id: int, answer: str):
 
     is_correct = correct_answer.strip().lower() == answer.strip().lower()
 
+    question = queries.fetch_question(id=id, category=None, difficulty=None, type=None)
+    if not question:
+        raise HTTPException(status_code=404, detail="Question not found")
+
+    difficulty = question["difficulty"]
+    move = 0
+
+    if is_correct:
+        if difficulty == "easy":
+            move = 1
+        elif difficulty == "medium":
+            move = 2
+        elif difficulty == "hard":
+            move = 3
+    else:
+        if difficulty == "easy":
+            move = -3
+        elif difficulty == "medium":
+            move = -2
+        elif difficulty == "hard":
+            move = -1
+
     return {
         "correct": is_correct,
-        "correctAnswer": correct_answer
+        "correctAnswer": correct_answer,
+        "move": move
     }
+
