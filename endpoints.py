@@ -78,7 +78,7 @@ def check_answer(id: int, answer: str):
 
     return {
         "correct": is_correct,
-        "correctAnswer": correct_answer,
+        "correctAnswers": correct_answers,
         "move": move
     }
 
