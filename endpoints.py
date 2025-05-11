@@ -42,11 +42,17 @@ def get_question(
 
 @router.post("/checkAnswer")
 def check_answer(id: int, answer: str):
-    correct_answer = queries.get_correct_answer(id)
-    if correct_answer is None:
+    correct_answer_comma_seperated = queries.get_correct_answer(id)
+
+    if correct_answer_comma_seperated is None:
         raise HTTPException(status_code=404, detail="Question not found")
 
-    is_correct = correct_answer.strip().lower() == answer.strip().lower()
+    correct_answers = [part.strip() for part in correct_answer_comma_seperated.split(",")]
+
+    is_correct = False
+    for correct_answer in correct_answers:
+        if (correct_answer.strip().lower() == answer.strip().lower()):
+            is_correct = True
 
     question = queries.fetch_question(id=id, category=None, difficulty=None, type=None)
     if not question:
